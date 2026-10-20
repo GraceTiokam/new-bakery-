@@ -1,0 +1,90 @@
+openapi: 3.0.3
+info:
+  title: Bakeries API
+  description: API de démonstration pour illustrer la structure OpenAPI.
+  version: 1.0.0
+servers:
+  - url: https://api.exemple.com/v1
+    description: Serveur de production
+  - url: https://sandbox.api.exemple.com/v1
+    description: Serveur de test
+
+paths:
+  /bakeries:
+    get:
+      summary: Liste des boulangeries
+      description: Retourne toutes les boulangeries enregistrées.
+      responses:
+        '200':
+          description: Liste récupérée avec succès
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bakeries'
+    post:
+      summary: Créer une boulangerie
+      description: Ajoute une nouvelle boulangerie à la base.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BakeriesCommon'
+      responses:
+        '201':
+          description: Boulangerie créée avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bakeries'
+
+  /bakeries/{id}:
+    put:
+      summary: Modifier une boulangerie
+      description: Met à jour la boulangerie correspondant à l'ID spécifié (notamment sa localisation).
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identifiant unique de la boulangerie à modifier
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BakeriesCommon'
+      responses:
+        '200':
+          description: Boulangerie modifiée avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bakeries'
+        '404':
+          description: Boulangerie non trouvée
+
+components:
+  schemas:
+    BakeriesCommon:
+      type: object
+      required:
+        - name: location
+      properties:
+        name:
+          type: string
+          example: "PAUL"
+        location:
+          type: string
+          example: "12 Rue de la République, Paris"
+    Bakeries:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+        - $ref: '#/components/schemas/BakeriesCommon'
