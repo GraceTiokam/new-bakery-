@@ -1,0 +1,17 @@
+name: lint
+on: push
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Redocly CLI
+        run: npm install -g @redocly/cli@latest
+      - name: Lint OpenAPI definition
+        run: redocly lint src/openAPI.yaml
