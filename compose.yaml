@@ -1,0 +1,10 @@
+services:
+  docs:
+    build: .
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    develop:
+      watch:
+        - action: rebuild
+          path: ./src/openAPI.yaml
